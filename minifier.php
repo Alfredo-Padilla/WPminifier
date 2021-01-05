@@ -1,3 +1,4 @@
+
 <?php
 /**
 * Plugin Name: Minifier
@@ -7,12 +8,11 @@
 **/
 
 // INTERFACE
-add_action( 'admin_menu', 'minifier_menu_2' );
 function minifier_menu_2(){    
     $page_title = 'fminifier';   
     $menu_title = 'FMinifier';   
     $capability = 'manage_options';   
-    $menu_slug  = 'extra-post-info';   
+    $menu_slug  = 'minifier';   
     $function   = 'minifier_menu_html';   
     $icon_url   = 'dashicons-media-code';   
     $position   = 4;    
@@ -26,10 +26,11 @@ function minifier_menu_2(){
         $position 
     ); 
 }
-
+add_action( 'admin_menu', 'minifier_menu_2' );
 if( !function_exists("minifier_menu_html") ) { 
     function minifier_menu_html() {
         ?>
+        <div style="max-width: 1140px; margin: 0 auto;">
             <style>
                 table {
                     border: none;
@@ -59,10 +60,25 @@ if( !function_exists("minifier_menu_html") ) {
                 input:hover {
                     background-color: #f1f1f1;
                 }
+                .log-box {
+                    margin-top: 50px !important; 
+                    background-color: white; 
+                    /* max-width: 500px;  */
+                    max-height: 500px; 
+                    overflow-x: hidden;
+                    border: 1px solid #ccd0d4;
+                    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+                }
+                .log-box h1 {
+                    background: #f9f9f9;
+                    border-bottom: 1px solid #ccd0d4;
+                    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+                    text-align: center;
+                }
             </style>
-            <h1>Minificador de Archivos</h1>
+            <h1 >Minificador de Archivos</h1>
 
-            <table class="wp-list-table">
+            <table style="margin: 0 auto;  width: 100%;">
                 <?php display_files(get_files()); ?>            
             </table>
 
@@ -73,16 +89,26 @@ if( !function_exists("minifier_menu_html") ) {
         <?php
 
         if (isset($_POST["minify_all"])) {
-            echo "<div style=\"margin-top: 50px; max-width: 500px; max-height: 500px; overflow: scroll;\">";
+            ?>
+                <div class="log-box" style="margin: 0 auto;">
+                    <div style="position: sticky; top: 0; left: 0; background: white;">
+                        <h1 style="padding: 10px 0; margin: 0;">Logs</h1>
+                    </div>
+            <?php
             minimize(get_files());
             echo "</div>";
         }
         if (isset($_POST["delete_all"])) {
-            echo "<div style=\"margin-top: 50px; max-width: 500px; max-height: 500px; overflow: scroll;\">";
+            echo "<div class=\"log-box\">";
+            ?>
+                <div style="position: sticky; top: 0; left: 0; background: white;">
+                    <h1 style="padding: 10px 0; margin: 0;">Logs</h1>
+                </div>
+            <?php
             delete_all_minified(get_files());
             echo "</div>";
         }
-
+        ?> </div> <?php
     }
 }
 function display_files($files) {
@@ -107,7 +133,7 @@ function display_file($file) {
 
             <td>
                 <form method="post"> 
-                    <input type="submit" name="minify" value="Minify" />
+                    <input style="float: right;" type="submit" name="minify" value="Minify" />
                 </form>
             </td>
         </tr>
@@ -205,6 +231,5 @@ function delete_all_minified($files) {
                     echo "<h2>>Borrando: $file</h2>";
                 }
 }
-
 
 ?>
